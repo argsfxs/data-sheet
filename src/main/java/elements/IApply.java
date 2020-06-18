@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 public interface IApply<T>
 {
-    T apply( Function<elements.Cell, Object> function );
+    T apply( Function<Cell, Object> function );
 
-    T applyIf( Predicate<elements.Cell> predicate, Function<elements.Cell, Object> function );
+    T applyIf( Predicate<Cell> predicate, Function<Cell, Object> function );
 }

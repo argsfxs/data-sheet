@@ -8,13 +8,13 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-class RecordStore implements Iterable<elements.Record>
+class RecordStore implements Iterable<Record>
 {
-    private final ArrayList<elements.Record> records;
+    private final ArrayList<Record> records;
 
     private ArrayList<String> columnNames;
 
-    RecordStore( List<elements.Record> records )
+    RecordStore( List<Record> records )
     {
         this.records = new ArrayList<>( records );
     }
@@ -46,7 +46,7 @@ class RecordStore implements Iterable<elements.Record>
         {
             rows.add( getColumnNames() );
         }
-        records.stream().filter( Predicate.not( elements.Record::isEmpty ) ).forEach( row ->
+        records.stream().filter( Predicate.not( Record::isEmpty ) ).forEach( row ->
                 rows.add( row.cells().stream().map( cell -> StringConversion
                         .quoteCommaValue( withRawValues ? cell.getRawValue().toString() : CellFormatter
                                 .format( cell.getValue(), cell.getCellType() ) ) ).collect( Collectors.toList() ) ) );
@@ -78,7 +78,7 @@ class RecordStore implements Iterable<elements.Record>
         columnNames.remove( index );
     }
 
-    elements.Record getRecord( int index )
+    Record getRecord( int index )
     {
         return records.get( index );
     }
@@ -104,24 +104,24 @@ class RecordStore implements Iterable<elements.Record>
             addColumnName( elements.get( 0 ).toString() );
             elements.remove( 0 );
         }
-        elements.Record newColumn = createRecord( elements, rowCount(), RecordType.COLUMN );
-        Iterator<elements.Record> rowIterator = records.iterator();
-        Iterator<elements.Cell> cellIterator = newColumn.iterator();
+        Record newColumn = createRecord( elements, rowCount(), RecordType.COLUMN );
+        Iterator<Record> rowIterator = records.iterator();
+        Iterator<Cell> cellIterator = newColumn.iterator();
         while ( rowIterator.hasNext() )
         {
-            elements.Record row = rowIterator.next();
+            Record row = rowIterator.next();
             row.add( columnIndex, cellIterator.next() );
         }
     }
 
     void setColumn( int columnIndex, List<?> elements )
     {
-        elements.Record newColumn = createRecord( elements, rowCount(), RecordType.COLUMN );
-        Iterator<elements.Record> rowIterator = records.iterator();
-        Iterator<elements.Cell> cellIterator = newColumn.iterator();
+        Record newColumn = createRecord( elements, rowCount(), RecordType.COLUMN );
+        Iterator<Record> rowIterator = records.iterator();
+        Iterator<Cell> cellIterator = newColumn.iterator();
         while ( rowIterator.hasNext() )
         {
-            elements.Record row = rowIterator.next();
+            Record row = rowIterator.next();
             row.set( columnIndex, cellIterator.next() );
         }
     }
@@ -140,7 +140,7 @@ class RecordStore implements Iterable<elements.Record>
         }
     }
 
-    void sort( Comparator<? super elements.Record> comparator )
+    void sort( Comparator<? super Record> comparator )
     {
         records.sort( comparator );
     }
@@ -157,17 +157,17 @@ class RecordStore implements Iterable<elements.Record>
 
     int count()
     {
-        return records.stream().mapToInt( elements.Record::count ).sum();
+        return records.stream().mapToInt( Record::count ).sum();
     }
 
-    ArrayList<elements.Record> rows()
+    ArrayList<Record> rows()
     {
         return records;
     }
 
-    elements.Record newRecord( List<elements.Cell> elements )
+    Record newRecord( List<Cell> elements )
     {
-        return new elements.Record( elements );
+        return new Record( elements );
     }
 
     private void fillRecords( List<List<String>> elements, boolean withColumnNames )
@@ -178,39 +178,39 @@ class RecordStore implements Iterable<elements.Record>
             this.columnNames = new ArrayList<>( elements.get( 0 ) );
             elements.remove( 0 );
         }
-        elements.stream().map( elements.Record::new ).forEach( records::add );
+        elements.stream().map( Record::new ).forEach( records::add );
     }
 
     private void fillRecords( int capacity )
     {
         for ( int i = 0; i < capacity; i++ )
         {
-            List<elements.Cell> cells = new ArrayList<>();
+            List<Cell> cells = new ArrayList<>();
             for ( int j = 0; j < capacity; j++ )
             {
-                cells.add( new elements.Cell() );
+                cells.add( new Cell() );
             }
-            records.add( new elements.Record( cells ) );
+            records.add( new Record( cells ) );
         }
     }
 
-    private elements.Record createRecord( List<?> elements, int currentSize, RecordType type )
+    private Record createRecord( List<?> elements, int currentSize, RecordType type )
     {
-        elements.Record newRecord;
+        Record newRecord;
         if ( elements.size() <= currentSize )
         {
-            List<elements.Cell> cells = new ArrayList<>( currentSize );
-            elements.stream().map( elements.Cell::new ).forEach( cells::add );
+            List<Cell> cells = new ArrayList<>( currentSize );
+            elements.stream().map( Cell::new ).forEach( cells::add );
             int remaining = currentSize - cells.size();
             for ( int i = 1; i <= remaining; i++ )
             {
-                cells.add( new elements.Cell() );
+                cells.add( new Cell() );
             }
-            newRecord = new elements.Record( cells );
+            newRecord = new Record( cells );
         }
         else
         {
-            newRecord = new elements.Record( elements.stream().map( elements.Cell::new ).collect( Collectors.toList() ) );
+            newRecord = new Record( elements.stream().map( Cell::new ).collect( Collectors.toList() ) );
             resizeStore( newRecord.size(), type );
         }
         return newRecord;
@@ -244,7 +244,7 @@ class RecordStore implements Iterable<elements.Record>
             {
                 for ( int i = initialColumnSize; i < rowSize; i++ )
                 {
-                    row.add( new elements.Cell() );
+                    row.add( new Cell() );
                 }
             } );
         }
@@ -255,17 +255,17 @@ class RecordStore implements Iterable<elements.Record>
         int remaining = columnSize - rowCount();
         for ( int i = 1; i <= remaining; i++ )
         {
-            List<elements.Cell> cells = new ArrayList<>();
+            List<Cell> cells = new ArrayList<>();
             for ( int j = 0; j < columnCount(); j++ )
             {
-                cells.add( new elements.Cell() );
+                cells.add( new Cell() );
             }
-            records.add( new elements.Record( cells ) );
+            records.add( new Record( cells ) );
         }
     }
 
     @Override
-    public Iterator<elements.Record> iterator()
+    public Iterator<Record> iterator()
     {
         return records.iterator();
     }

@@ -10,33 +10,33 @@ import java.util.function.Predicate;
 /**
  * A record can represent a row or a column. It basically is a collection of cells.
  */
-public class Record implements Iterable<elements.Cell>, elements.IApply<Record>
+public class Record implements Iterable<Cell>, IApply<Record>
 {
-    private final List<elements.Cell> cells;
+    private final List<Cell> cells;
 
     Record( List<?> elements )
     {
         cells = new ArrayList<>( elements.size() );
-        elements.stream().map( element -> element instanceof elements.Cell ? ( elements.Cell ) element : new elements.Cell( element ) )
+        elements.stream().map( element -> element instanceof Cell ? ( Cell ) element : new Cell( element ) )
                 .forEach( cells::add );
     }
 
-    elements.Cell get( int index )
+    Cell get( int index )
     {
         return cells.get( index );
     }
 
-    void add( elements.Cell cell )
+    void add( Cell cell )
     {
         cells.add( cell );
     }
 
-    void add( int index, elements.Cell cell )
+    void add( int index, Cell cell )
     {
         cells.add( index, cell );
     }
 
-    void set( int index, elements.Cell cell )
+    void set( int index, Cell cell )
     {
         cells.set( index, cell );
     }
@@ -49,7 +49,7 @@ public class Record implements Iterable<elements.Cell>, elements.IApply<Record>
     CellType getCellType()
     {
         CellType firstCellType = cells.get( 0 ).getCellType();
-        for ( elements.Cell cell : cells )
+        for ( Cell cell : cells )
         {
             if ( cell.getCellType() == firstCellType )
             {
@@ -62,7 +62,7 @@ public class Record implements Iterable<elements.Cell>, elements.IApply<Record>
 
     boolean isEmpty()
     {
-        for ( elements.Cell cell : cells )
+        for ( Cell cell : cells )
         {
             if ( !cell.isEmpty() )
             {
@@ -77,7 +77,7 @@ public class Record implements Iterable<elements.Cell>, elements.IApply<Record>
      *
      * @return a list of Cells
      */
-    public List<elements.Cell> cells()
+    public List<Cell> cells()
     {
         return Collections.unmodifiableList( cells );
     }
@@ -88,7 +88,7 @@ public class Record implements Iterable<elements.Cell>, elements.IApply<Record>
      * @param function A function which accepts a Cell as input and returns an Object with will be set as the new value of the Cell.
      * @return the Record
      */
-    public Record apply( Function<elements.Cell, Object> function )
+    public Record apply( Function<Cell, Object> function )
     {
         cells.stream().forEach( cell -> cell.apply( function ) );
         return this;
@@ -101,7 +101,7 @@ public class Record implements Iterable<elements.Cell>, elements.IApply<Record>
      * @param function  A function which accepts a Cell as input and returns an Object with will be set as the new value of the Cell.
      * @return the Record
      */
-    public Record applyIf( Predicate<elements.Cell> predicate, Function<elements.Cell, Object> function )
+    public Record applyIf( Predicate<Cell> predicate, Function<Cell, Object> function )
     {
         cells.stream().filter( predicate ).forEach( cell -> cell.apply( function ) );
         return this;
@@ -124,7 +124,7 @@ public class Record implements Iterable<elements.Cell>, elements.IApply<Record>
      */
     public int count()
     {
-        return ( int ) cells.stream().filter( Predicate.not( elements.Cell::isEmpty ) ).count();
+        return ( int ) cells.stream().filter( Predicate.not( Cell::isEmpty ) ).count();
     }
 
     /**
@@ -143,7 +143,7 @@ public class Record implements Iterable<elements.Cell>, elements.IApply<Record>
     }
 
     @Override
-    public Iterator<elements.Cell> iterator()
+    public Iterator<Cell> iterator()
     {
         return cells.iterator();
     }

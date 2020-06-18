@@ -206,7 +206,7 @@ public class Cell implements Comparable<Cell>
 
         String getResult()
         {
-            result = elements.ExpressionEvaluator.evaluate( this );
+            result = ExpressionEvaluator.evaluate( this );
             return result;
         }
 

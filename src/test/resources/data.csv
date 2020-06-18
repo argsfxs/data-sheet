@@ -1,0 +1,11 @@
+Name,Capital,Population,Forest Area,GDP,Seashore?
+Germany,Berlin,83149300,0.32,52556,true
+Austria,Vienna,8858775,0.462,53879,false
+Sweden,Stockholm,10327589,0.57,51405,true
+Russia,Moscow,144526636,0.4976,25763,true
+Paraguay,Asunción,6943739,0.443,13109,false
+Japan,Tokyo,126860000,0.67,42067,true
+Australia,Canberra,25324713,0.17,49378,true
+Brazil,Brasília,208360000,0.624,15553,true
+South Korea,Seoul,51629512,0.6335,38824,true
+Qatar,Doha,2700000,0,128647,true
